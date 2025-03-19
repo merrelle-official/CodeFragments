@@ -28,6 +28,8 @@ const closeNotification = (event: MouseEvent) => {
   }
 };
 
+
+
 window.addEventListener('click', closeMenu);
 window.addEventListener('click', closeNotification);
 </script>
@@ -36,14 +38,18 @@ window.addEventListener('click', closeNotification);
   <div class="container">
     <img src="@/assets/icons/Notification.svg" alt="" class="notification btn" @click="toggleNotification">
 
-    <div v-if="notificationVisible" class="notification-menu">
-        <button class="clear-notificaions btn">Clear all</button>
+    <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': userStore.notifications.length === 0}">
+      
+        <button v-if="userStore.notifications.length !== 0" class="clear-notificaions btn" @click.stop="userStore.clearAllNotifications">Clear all</button>
+
+        <p v-if="userStore.notifications.length === 0" class="no-notifications">No any notifications</p>
         <ul>
             <li v-for="item in userStore.notifications" :key="item.id" class="notification-li">
               <div class="btn">
                 <h5 class="notification-title">{{ item.title }}</h5>
                 <p class="notification-text">{{ item.text }}</p>
                 <p class="notification-date">{{ item.date }}</p>
+                <img src="@/assets/icons/Cross.svg" alt="" class="delete-notification btn" @click.stop="userStore.deleteNotification(item.id)">
               </div>
               <hr>
             </li>
@@ -153,6 +159,7 @@ hr{
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  overflow-y: auto;
 }
 
 .notification-li{
@@ -170,6 +177,7 @@ hr{
     flex-direction: column;
     gap: 0.5rem;
     border: 0.5px solid #606060;
+    position: relative;
 }
 
 .notification-text{
@@ -186,4 +194,35 @@ hr{
   padding: 0.3rem;
   border: 0.5px solid #606060;
 }
+
+.delete-notification{
+  width: 10px;
+  height: 10px;
+  background-color: rgb(144, 1, 1);
+  border-radius: 50%;
+  padding: 2px;
+  box-sizing: content-box;
+  display: flex;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.notification-li:hover .delete-notification {
+  opacity: 1;
+}
+
+.no-notifications{
+  color: #5e5e5e;
+}
+
+.clear-notifications{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 </style>

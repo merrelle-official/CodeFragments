@@ -61,6 +61,14 @@ export const useUserStore = defineStore('user', () => {
         isLogin.value = false
     }
 
+    function deleteNotification(notificationID: number){
+         notifications.value = notifications.value.filter(notification => notification.id !== notificationID)
+    }
+
+    function clearAllNotifications(){
+        notifications.value = []
+    }
+
     return {
         isLogin,
         user,
@@ -68,5 +76,7 @@ export const useUserStore = defineStore('user', () => {
         login,
         register,
         logout,
+        deleteNotification,
+        clearAllNotifications,
      }
 })
