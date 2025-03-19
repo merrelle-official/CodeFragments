@@ -4,9 +4,14 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const menuVisible = ref(false);
+const notificationVisible = ref(false);
 
 const toggleMenu = () => {
   menuVisible.value = !menuVisible.value;
+};
+
+const toggleNotification = () => {
+  notificationVisible.value = !notificationVisible.value;
 };
 
 const closeMenu = (event: MouseEvent) => {
@@ -16,12 +21,35 @@ const closeMenu = (event: MouseEvent) => {
   }
 };
 
+const closeNotification = (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  if (!target.closest('.notification-menu') && !target.closest('.notification')) {
+    notificationVisible.value = false;
+  }
+};
+
 window.addEventListener('click', closeMenu);
+window.addEventListener('click', closeNotification);
 </script>
 
 <template>
   <div class="container">
-    <img src="@/assets/icons/Notification.svg" alt="" class="notification btn">
+    <img src="@/assets/icons/Notification.svg" alt="" class="notification btn" @click="toggleNotification">
+
+    <div v-if="notificationVisible" class="notification-menu">
+        <button class="clear-notificaions btn">Clear all</button>
+        <ul>
+            <li v-for="item in userStore.notifications" :key="item.id" class="notification-li">
+              <div class="btn">
+                <h5 class="notification-title">{{ item.title }}</h5>
+                <p class="notification-text">{{ item.text }}</p>
+                <p class="notification-date">{{ item.date }}</p>
+              </div>
+              <hr>
+            </li>
+        </ul>
+    </div>
+
     <img 
       :src="userStore.user?.img" 
       alt="" 
@@ -38,7 +66,7 @@ window.addEventListener('click', closeMenu);
             <hr>
             <li class="btn"><button >Profile</button></li>
             <li class="btn"><button >Settings</button></li>
-            <li class="btn"><button  @click="userStore.logout">Logout</button></li>
+            <li class="btn" @click="userStore.logout"><button>Logout</button></li>
         </ul>
     </div>
   </div>
@@ -68,7 +96,7 @@ window.addEventListener('click', closeMenu);
   position: absolute;
   top: 103%;  
   right: 0;
-  border-radius: 8px;
+  border-radius: 4px;
   min-width: 10rem;
   padding: 0.5rem;
   border: 0.5px solid #606060;
@@ -111,5 +139,51 @@ hr{
     width: 100%;
     border: 0.5px solid #424242;
     margin: 0.5rem 0;
+}
+
+.notification-menu{
+  position: absolute;
+  top: 103%;  
+  right: 0;
+  border-radius: 4px;
+  min-width: 22rem;
+  padding: 0.5rem;
+  border: 0.5px solid #606060;
+  height: 25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notification-li{
+    width: 100%;
+    /* padding: 0.5rem; */
+    text-align: left;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+}
+
+.notification-li>div{
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border: 0.5px solid #606060;
+}
+
+.notification-text{
+    font-size: 0.7rem;
+}
+
+.notification-date{
+    font-size: 0.6rem;
+    color: #606060;
+}
+
+.clear-notificaions{
+  align-self: end;
+  padding: 0.3rem;
+  border: 0.5px solid #606060;
 }
 </style>
