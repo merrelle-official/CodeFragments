@@ -1,37 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { useToggle } from '@/composables/hooks';
 
 const userStore = useUserStore();
-const menuVisible = ref(false);
-const notificationVisible = ref(false);
 
-const toggleMenu = () => {
-  menuVisible.value = !menuVisible.value;
-};
+const { state: menuVisible, toggle: toggleMenu } = useToggle();
+const { state: notificationVisible, toggle: toggleNotification } = useToggle();
 
-const toggleNotification = () => {
-  notificationVisible.value = !notificationVisible.value;
-};
-
-const closeMenu = (event: MouseEvent) => {
+const closeDropdowns = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
+  
   if (!target.closest('.avatar-menu') && !target.closest('.avatar')) {
     menuVisible.value = false;
   }
-};
 
-const closeNotification = (event: MouseEvent) => {
-  const target = event.target as HTMLElement;
   if (!target.closest('.notification-menu') && !target.closest('.notification')) {
     notificationVisible.value = false;
   }
 };
 
+onMounted(() => {
+  window.addEventListener('click', closeDropdowns);
+});
 
+onUnmounted(() => {
+  window.removeEventListener('click', closeDropdowns);
+});
 
-window.addEventListener('click', closeMenu);
-window.addEventListener('click', closeNotification);
 </script>
 
 <template>
@@ -39,10 +35,9 @@ window.addEventListener('click', closeNotification);
     <img src="@/assets/icons/Notification.svg" alt="" class="notification btn" @click="toggleNotification">
 
     <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': userStore.notifications.length === 0}">
-      
-        <button v-if="userStore.notifications.length !== 0" class="clear-notificaions btn" @click.stop="userStore.clearAllNotifications">Clear all</button>
-
-        <p v-if="userStore.notifications.length === 0" class="no-notifications">No any notifications</p>
+      <p v-if="!userStore.notifications.length" class="no-notifications">No any notifications</p>
+      <template v-else>
+        <button v-if="userStore.notifications.length !== 0" class="clear-notifications btn" @click.stop="userStore.clearAllNotifications">Clear all</button>
         <ul>
             <li v-for="item in userStore.notifications" :key="item.id" class="notification-li">
               <div class="btn">
@@ -54,6 +49,7 @@ window.addEventListener('click', closeNotification);
               <hr>
             </li>
         </ul>
+      </template>
     </div>
 
     <img 
@@ -189,7 +185,7 @@ hr{
     color: #606060;
 }
 
-.clear-notificaions{
+.clear-notifications{
   align-self: end;
   padding: 0.3rem;
   border: 0.5px solid #606060;

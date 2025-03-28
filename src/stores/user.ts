@@ -31,22 +31,28 @@ export const useUserStore = defineStore('user', () => {
     const notifications = ref<Notification[]>([
         {
             id: 1,
-            title: 'New notification',
-            text: 'You have new message',
+            title: 'You have new message',
+            text: 'FIVE send you a new message',
             date: '19:45 18.03.2025',
         },
         {
             id: 2,
-            title: 'New notification',
-            text: 'You have new message',
+            title: 'Your fragment was deleted',
+            text: 'Your fragment was deleted for violating the rules',
             date: '19:45 18.03.2025',
         },
         {
             id: 3,
-            title: 'New notification',
-            text: 'lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptate. ',
+            title: 'New subsciber',
+            text: 'destenix subscribed to you',
             date: '19:45 18.03.2025',
-            },
+        },
+        {
+            id: 4,
+            title: 'New comment',
+            text: 'destenix commented your fragment (Vue template)',
+            date: '19:45 18.03.2025',
+        },
     ])
 
     function login(){
