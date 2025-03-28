@@ -1,6 +1,7 @@
 :root {
   --bg-color: #424242;
   --text-color: #ECECEC;
+  --radius: 4px
 }
 
 .btn{
@@ -25,6 +26,10 @@
   display: flex;
 }
 
+.border{
+  border: 0.5px solid #606060;
+}
+
 *,
 *::after,
 *::before {
@@ -38,6 +43,7 @@
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
+  border-radius: var(--radius);
 }
 
 button{

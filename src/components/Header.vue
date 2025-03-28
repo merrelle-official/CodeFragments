@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { useUserStore } from '@/stores/user';
-import UserHeaderMenu from './UserHeaderMenu.vue';
+import UserHeaderMenu from '@/components/UserHeaderMenu.vue';
+import SearchLine from '@/components/SearchLine.vue'
 
 
 const userStore = useUserStore()
@@ -24,7 +25,7 @@ function logout() {
         <div>
             <h1 class="logo"><router-link to="/">CodeFragments_></router-link></h1>
         </div>
-
+        <SearchLine />
         <div class="user-block">
             <ul v-if="!userStore.isLogin">
                 <li><button class="btn btn-primary" @click="login">Sign in</button></li>
@@ -34,7 +35,7 @@ function logout() {
                 <UserHeaderMenu />
             </div>
         </div>
-        
+
     </div>
 </template>
 

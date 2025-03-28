@@ -38,8 +38,8 @@ window.addEventListener('click', closeNotification);
   <div class="container">
     <img src="@/assets/icons/Notification.svg" alt="" class="notification btn" @click="toggleNotification">
 
-    <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': userStore.notifications.length === 0}">
-      
+    <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': !userStore.notifications.length}">
+
         <button v-if="userStore.notifications.length !== 0" class="clear-notificaions btn" @click.stop="userStore.clearAllNotifications">Clear all</button>
 
         <p v-if="userStore.notifications.length === 0" class="no-notifications">No any notifications</p>
@@ -56,18 +56,18 @@ window.addEventListener('click', closeNotification);
         </ul>
     </div>
 
-    <img 
-      :src="userStore.user?.img" 
-      alt="" 
-      class="avatar btn" 
-      @click="toggleMenu" 
+    <img
+      :src="userStore.user?.img"
+      alt=""
+      class="avatar btn"
+      @click="toggleMenu"
     >
     <div v-if="menuVisible" class="user-menu">
         <ul>
             <li class="btn user-li">
                 <img :src="userStore.user?.img" alt="" class="user-avatar">
                 <span class="user-name">{{ userStore.user?.name }}</span>
-                
+
             </li>
             <hr>
             <li class="btn"><button >Profile</button></li>
@@ -100,7 +100,7 @@ window.addEventListener('click', closeNotification);
 
 .user-menu {
   position: absolute;
-  top: 103%;  
+  top: 103%;
   right: 0;
   border-radius: 4px;
   min-width: 10rem;
@@ -149,7 +149,7 @@ hr{
 
 .notification-menu{
   position: absolute;
-  top: 103%;  
+  top: 103%;
   right: 0;
   border-radius: 4px;
   min-width: 22rem;
