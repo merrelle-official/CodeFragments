@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import UserIMG from '@/assets/imgs/ava.jpg'
+import { ref, watch } from 'vue'
+import { AuthAPI } from '@/api/auth'
 
 export interface User {
     id: number,
-    name: string,
+    username: string,
     email: string,
-    password: string,
-    img: string,
+    role: string,
 }
 
 export interface Notification {
@@ -19,13 +18,11 @@ export interface Notification {
 
 export const useUserStore = defineStore('user', () => {
     const isLogin = ref(false)
+    const user = ref<User | null>(null)
+    const token = ref<string | null>(null)
 
-    const user = ref<User | null>({
-        id: 1,
-        name: 'merrelle',
-        email: 'merrelle@text.ru',
-        password: '123456',
-        img: UserIMG,
+    watch(user, (newUser) => {
+        console.log('User changed:', newUser)
     })
 
     const notifications = ref<Notification[]>([
@@ -55,23 +52,62 @@ export const useUserStore = defineStore('user', () => {
         },
     ])
 
-    function login(){
-        isLogin.value = true
+    async function login(email: string, password: string) {
+        try {
+            const { token: authToken, user: userData } = await AuthAPI.login(email, password)
+
+            token.value = authToken
+            user.value = userData
+            isLogin.value = true
+
+            localStorage.setItem('token', authToken)
+        } catch (error) {
+            console.error('Ошибка авторизации:', error)
+            throw error 
+        }
     }
 
-    function register(){
-        isLogin.value = true
+    async function register(username: string, email: string, password: string) {
+        try {
+            const { token: authToken, user: userData } = await AuthAPI.register(username, email, password)
+            token.value = authToken
+            user.value = userData
+            isLogin.value = true
+
+            localStorage.setItem('token', authToken)
+        } catch (error) {
+            console.error('Ошибка регистрации:', error)
+            throw error 
+        }
     }
 
-    function logout(){
+    async function checkAuth() {
+        const storedToken = localStorage.getItem('token')
+        if (!storedToken) return
+
+        try {
+            const userData = await AuthAPI.getMe()
+            user.value = userData
+            token.value = storedToken
+            isLogin.value = true
+        } catch (error) {
+            console.error('Ошибка проверки авторизации:', error)
+            logout()
+        }
+    }
+
+    function logout() {
         isLogin.value = false
+        user.value = null
+        token.value = null
+        localStorage.removeItem('token')
     }
 
-    function deleteNotification(notificationID: number){
-         notifications.value = notifications.value.filter(notification => notification.id !== notificationID)
+    function deleteNotification(notificationID: number) {
+        notifications.value = notifications.value.filter(notification => notification.id !== notificationID)
     }
 
-    function clearAllNotifications(){
+    function clearAllNotifications() {
         notifications.value = []
     }
 
@@ -84,5 +120,6 @@ export const useUserStore = defineStore('user', () => {
         logout,
         deleteNotification,
         clearAllNotifications,
-     }
+        checkAuth,
+    }
 })

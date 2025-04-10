@@ -1,12 +1,20 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 
+
+
+const searchInputRef = ref<HTMLInputElement | null>(null);
+
+const focusInput = () => {
+    searchInputRef.value?.focus();
+};
 </script>
 
 <template>
     <div class="container border">
-        <img src="@/assets/icons/Search.svg" alt="" class="search-icon icon">
-        <input type="text" class="search-input" placeholder="Find fragments or user..." />
-        <img src="@/assets/icons/Send.svg" alt="" class="icon">
+        <img src="@/assets/icons/Search.svg" alt="" class="search-icon icon" @click="focusInput">
+        <input ref="searchInputRef" type="text" class="search-input" placeholder="Find fragments or user..." />
+        <img src="@/assets/icons/Send.svg" alt="" class="icon find">
     </div>
 </template>
 
@@ -36,5 +44,13 @@
 
 .container:hover{
     border-color: #8a8a8a;
+}
+
+.find:hover{
+    cursor: pointer;
+}
+
+.find:active{
+    transform: scale(0.9);
 }
 </style>

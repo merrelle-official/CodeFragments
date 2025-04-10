@@ -7,15 +7,30 @@
 .btn{
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .btn:hover{
   filter: brightness(1.2);
 }
 
+.btn:active{
+  transform: scale(0.97);
+}
+
 .btn-primary{
-  --bg-color: #FF5722;
+  --bg-color: #7d03c8;
   --text-color: #fff;
+}
+
+.btn-secondary{
+  --bg-color: none;
+  --text-color: #fff;
+  border: 1px solid #7d03c8;
+}
+
+.btn-secondary:hover{
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .darker{
@@ -28,6 +43,73 @@
 
 .border{
   border: 0.5px solid #606060;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper > input {
+  padding: 0.7rem;
+  padding-top: 1.4rem; 
+  border-radius: var(--radius);
+  border: 1px solid #606060;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.1s ease-in-out;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-wrapper > input:focus {
+  outline: none;
+  border: 1px solid #e8e8e8;
+}
+
+.input-wrapper > input:hover {
+  border-color: #e8e8e8;
+}
+
+.input-wrapper > input::placeholder {
+  color: transparent;
+}
+
+.input-wrapper > label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  font-size: 14px;
+  color: #8a8a8a;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: 0.2s ease all;
+  padding: 0 5px;
+  background-color: var(--bg-color);
+}
+
+.input-wrapper > input:focus::before,
+.input-wrapper > input:not(:placeholder-shown)::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 1;
+}
+
+.input-wrapper > input:focus + label,
+.input-wrapper > input:not(:placeholder-shown) + label {
+  padding: 5px 10px;
+  top: 0;
+  font-size: 12px;
+  border: 1px solid #e8e8e8;
+}
+
+.input-wrapper > input:not(:placeholder-shown){
+  border-color: #e8e8e8;
 }
 
 *,

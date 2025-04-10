@@ -53,7 +53,7 @@ onUnmounted(() => {
     </div>
 
     <img
-      :src="userStore.user?.img"
+      src="@/assets/imgs/ava.jpg"
       alt=""
       class="avatar btn"
       @click="toggleMenu"
@@ -62,7 +62,7 @@ onUnmounted(() => {
         <ul>
             <li class="btn user-li">
                 <img :src="userStore.user?.img" alt="" class="user-avatar">
-                <span class="user-name">{{ userStore.user?.name }}</span>
+                <span class="user-name">{{ userStore.user?.username }}</span>
 
             </li>
             <hr>

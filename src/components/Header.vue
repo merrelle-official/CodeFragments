@@ -2,21 +2,12 @@
 import { useUserStore } from '@/stores/user';
 import UserHeaderMenu from '@/components/UserHeaderMenu.vue';
 import SearchLine from '@/components/SearchLine.vue'
+import { useRouter } from 'vue-router';
 
 
 const userStore = useUserStore()
+const router = useRouter()
 
-function login() {
-    userStore.login()
-}
-
-function register() {
-    userStore.register()
-}
-
-function logout() {
-    userStore.logout()
-}
 
 </script>
 
@@ -28,8 +19,8 @@ function logout() {
         <SearchLine />
         <div class="user-block">
             <ul v-if="!userStore.isLogin">
-                <li><button class="btn btn-primary" @click="login">Sign in</button></li>
-                <li><button class="btn btn-primary" @click="register">Sign up</button></li>
+                <li><button class="btn btn-primary" @click="() => {router.push({name: 'auth', query: { source: 'login' } })}">Sign in</button></li>
+                <li><button class="btn btn-secondary" @click="() => {router.push({name: 'auth', query: { source: 'register' } })}">Sign up</button></li>
             </ul>
             <div v-else class="user-info">
                 <UserHeaderMenu />

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+
+const route = useRoute()
 </script>
 
 <template>
   <main>
-    <Header />
+    <Header v-if="route.path !== '/auth'" />
     <RouterView />
   </main>
   
