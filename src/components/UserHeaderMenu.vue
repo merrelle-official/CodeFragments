@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
-import { useToggle } from '@/composables/hooks';
+import { useToggle } from '@/hooks/useToggle';
+import { useNotification } from '@/hooks/useNotification';
+import { useNotificationStore } from '@/stores/notification';
 
+const { removeNotification, clearNotifications } = useNotification();
 const userStore = useUserStore();
+const notificationStore = useNotificationStore();
 
 const { state: menuVisible, toggle: toggleMenu } = useToggle();
 const { state: notificationVisible, toggle: toggleNotification } = useToggle();
@@ -34,17 +38,17 @@ onUnmounted(() => {
   <div class="container">
     <img src="@/assets/icons/Notification.svg" alt="" class="notification btn" @click="toggleNotification">
 
-    <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': userStore.notifications.length === 0}">
-      <p v-if="!userStore.notifications.length" class="no-notifications">No any notifications</p>
+    <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': notificationStore.notifications.length === 0}">
+      <p v-if="!notificationStore.notifications.length" class="no-notifications">No any notifications</p>
       <template v-else>
-        <button v-if="userStore.notifications.length !== 0" class="clear-notifications btn" @click.stop="userStore.clearAllNotifications">Clear all</button>
+        <button v-if="notificationStore.notifications.length !== 0" class="clear-notifications btn" @click.stop="clearNotifications">Clear all</button>
         <ul>
-            <li v-for="item in userStore.notifications" :key="item.id" class="notification-li">
+            <li v-for="item in notificationStore.notifications" :key="item.id" class="notification-li">
               <div class="btn">
                 <h5 class="notification-title">{{ item.title }}</h5>
                 <p class="notification-text">{{ item.text }}</p>
                 <p class="notification-date">{{ item.date }}</p>
-                <img src="@/assets/icons/Cross.svg" alt="" class="delete-notification btn" @click.stop="userStore.deleteNotification(item.id)">
+                <img src="@/assets/icons/Cross.svg" alt="" class="delete-notification btn" @click.stop="removeNotification(item.id)">
               </div>
               <hr>
             </li>

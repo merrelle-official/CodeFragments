@@ -23,6 +23,7 @@
   --text-color: #fff;
 }
 
+
 .btn-secondary{
   --bg-color: none;
   --text-color: #fff;
@@ -130,4 +131,9 @@
 
 button{
   cursor: pointer;
+}
+
+button:disabled{
+  background-color: #8a8a8a;
+  cursor: not-allowed;
 }

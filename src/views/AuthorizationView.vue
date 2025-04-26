@@ -1,126 +1,50 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user';
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, watch } from 'vue'
+import { useAuth } from '@/hooks/useAuth.ts'
+import { useRoute } from 'vue-router'
+import router from '@/router'
 
-const userStore = useUserStore()
-const router = useRouter()
+const { login, register, isError, textError, isLoading } = useAuth()
+
 const route = useRoute()
-const isFormLogin = ref<boolean | null>(route.query.source === 'login' ? true : false)
+const isFormLogin = ref(route.query.source === 'login')
 
-const isError = ref<boolean>(false);
-const textError = ref<string | null>(null);
+const loginEmail = ref('')
+const loginPassword = ref('')
 
-const loginEmail = ref<string | null>(null);
-const loginPassword = ref<string | null>(null);
+const registerUsername = ref('')
+const registerEmail = ref('')
+const registerPassword = ref('')
+const registerPasswordConfirm = ref('')
 
-const registerUsername = ref<string | null>(null);
-const registerEmail = ref<string | null>(null);
-const registerPassword = ref<string | null>(null);
-const registerPasswordConfirm = ref<string | null>(null);
-
-function validatePassword(password: string): boolean {
-    return password.length >= 8 && /[a-zA-Z]/.test(password) && /\d/.test(password)
-}
-
-const login = async (e: Event) => {
-    e.preventDefault();
-
-    const email = loginEmail.value?.trim()
-    const password = loginPassword.value
-
-    isError.value = false;
-    textError.value = null;
-
-    if (!email || !password) {
-        isError.value = true;
-        textError.value = 'Please fill in all fields';
-        return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-        isError.value = true
-        textError.value = 'Invalid email format'
-        return
-    }
-
-    if (!validatePassword(password)) {
-        isError.value = true;
-        textError.value = 'Password must be at least 8 characters';
-        return;
-    }
-
-    try {
-        await userStore.login(email, password);
-        router.push({ name: 'home' });
-    } catch (error) {
-        isError.value = true;
-        textError.value = 'Invalid email or password';
-    }
-};
-
-
-const register = async (e: Event) => {
+const handleLogin = (e: Event) => {
     e.preventDefault()
-
-    isError.value = false
-    textError.value = null
-
-    const username = registerUsername.value?.trim()
-    const email = registerEmail.value?.trim()
-    const password = registerPassword.value
-    const passwordConfirm = registerPasswordConfirm.value
-
-    if (!username || !email || !password || !passwordConfirm) {
-        isError.value = true
-        textError.value = 'Please fill in all fields'
-        return
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-        isError.value = true
-        textError.value = 'Invalid email format'
-        return
-    }
-
-    if (password !== passwordConfirm) {
-        isError.value = true
-        textError.value = 'Passwords do not match'
-        return
-    }
-
-    if (!validatePassword(password)) {
-        isError.value = true
-        textError.value = 'Password must be at least 8 characters and contain letters and numbers'
-        return
-    }
-
-    try {
-        await userStore.register(username, email, password)
-        router.push({ name: 'home' })
-    } catch (error: any) {
-        isError.value = true
-
-        if (error?.response?.data?.message) {
-            textError.value = error.response.data.message
-        } else {
-            textError.value = 'Registration failed. Please try again.'
-        }
-    }
+    login(loginEmail.value, loginPassword.value)
 }
 
+const handleRegister = (e: Event) => {
+    e.preventDefault()
+    register(registerUsername.value, registerEmail.value, registerPassword.value, registerPasswordConfirm.value)
+}
 
+const toggleForm = () => {
+  isFormLogin.value = !isFormLogin.value
+  isError.value = false
+  textError.value = ''
+}
+
+const goHome = () => {
+    router.push({name: "home"})
+}
 
 </script>
 
 <template>
     <main class="main">
         <div v-if="isFormLogin" class="auth-container darker">
-            
+            <button class="btn btn-secondary go-home" @click="goHome">&lt Go home</button>
             <h1>Sign in</h1>
-            <form action="" class="login-form">
+            <form @submit="handleLogin" class="login-form">
                 <div class="input-container">
                     <div class="input-wrapper">
                         <input type="email" id="email" placeholder=" " class="input-field input" v-model="loginEmail" required>
@@ -133,19 +57,19 @@ const register = async (e: Event) => {
                 </div>
                 <div class="login-options">
                     <p class="forgot-password">Forgot password?</p>
-                    <p class="no-account" @click="() => {isFormLogin = !isFormLogin}">No account? Sign up</p>
+                    <p class="no-account" @click="toggleForm">No account? Sign up</p>
                 </div>
                 <div v-if="isError" class="error_message">
                     <p>{{ textError }}</p>
                 </div>
-                <button type="submit" class="login-btn btn btn-primary" @click="login">Sign in</button>
+                <button type="submit" :disabled="isLoading" class="login-btn btn btn-primary">Sign in</button>
             </form>
         </div>
 
         <div v-else class="auth-container darker">
-            
+            <button class="btn btn-secondary go-home" @click="goHome">&lt Go home</button>
             <h1>Sign up</h1>
-            <form action="" class="login-form" autocomplete="off">
+            <form @submit="handleRegister" class="login-form">
                 <div class="input-container">
                     <div class="input-wrapper">
                         <input type="text" id="usernamereg" placeholder=" " class="input-field input" autocomplete="off" v-model="registerUsername" required>
@@ -160,17 +84,17 @@ const register = async (e: Event) => {
                         <label for="passwordreg" class="floating-label">Password</label>
                     </div>
                     <div class="input-wrapper">
-                        <input type="password" id="passwordConfurmreg" placeholder=" " class="input-field input" v-model="registerPasswordConfirm" required>
-                        <label for="passwordConfurmreg" class="floating-label">Password confirm</label>
+                        <input type="password" id="passwordConfirmreg" placeholder=" " class="input-field input" v-model="registerPasswordConfirm" required>
+                        <label for="passwordConfirmreg" class="floating-label">Password confirm</label>
                     </div>
                 </div>
                 <div class="login-options">
-                    <p class="forgot-password" @click="() => {isFormLogin = !isFormLogin}">Already registered? Sign in</p>
+                    <p class="forgot-password" @click="toggleForm">Already registered? Sign in</p>
                 </div>
                 <div v-if="isError" class="error_message">
                     <p>{{ textError }}</p>
                 </div>
-                <button type="submit" class="login-btn btn btn-primary" @click="register">Sign up</button>
+                <button type="submit" class="login-btn btn btn-primary">Sign up</button>
             </form>
         </div>
     </main>
@@ -185,6 +109,7 @@ const register = async (e: Event) => {
 }
 
 .auth-container{
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -192,6 +117,14 @@ const register = async (e: Event) => {
     width: 30%;
     padding: 3rem;
     gap: 2rem;
+}
+
+.go-home{
+    padding: 0.5rem 0.5rem;
+    position: absolute;
+    top: 0;
+    transform: translateY(-140%);
+    left: 0;
 }
 
 .login-form{
