@@ -85,10 +85,20 @@ export function useAuth() {
         }
     }
 
+    function logout() {
+        userStore.logout()
+    }
+
+    function checkAuth() {
+        userStore.checkAuth()
+    }
+
     return {
         isError,
         textError,
         isLoading,
+        checkAuth,
+        logout,
         login,
         register,
     }

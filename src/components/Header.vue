@@ -8,6 +8,13 @@ import { useRouter } from 'vue-router';
 const userStore = useUserStore()
 const router = useRouter()
 
+const handleSignin = () => {
+    router.push({name: 'auth', query: { source: 'login' } })
+    
+}
+const handleSignup = () => {
+    router.push({name: 'auth', query: { source: 'register' } })
+}
 
 </script>
 
@@ -19,8 +26,8 @@ const router = useRouter()
         <SearchLine />
         <div class="user-block">
             <ul v-if="!userStore.isLogin">
-                <li><button class="btn btn-primary" @click="() => {router.push({name: 'auth', query: { source: 'login' } })}">Sign in</button></li>
-                <li><button class="btn btn-secondary" @click="() => {router.push({name: 'auth', query: { source: 'register' } })}">Sign up</button></li>
+                <li><button class="btn btn-primary" @click="handleSignin">Sign in</button></li>
+                <li><button class="btn btn-secondary" @click="handleSignup">Sign up</button></li>
             </ul>
             <div v-else class="user-info">
                 <UserHeaderMenu />

@@ -39,7 +39,9 @@ export const useUserStore = defineStore('user', () => {
 
     async function checkAuth() {
         const storedToken = localStorage.getItem('token')
-        if (!storedToken) return
+        if (!storedToken) {
+            return
+        }
         try {
             const userData = await AuthAPI.getMe()
             user.value = userData
