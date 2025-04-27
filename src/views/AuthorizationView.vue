@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useAuth } from '@/hooks/useAuth.ts'
 import { useRoute } from 'vue-router'
 import router from '@/router'

@@ -1,44 +1,23 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
-import { useToggle } from '@/hooks/useToggle';
 import { useNotification } from '@/hooks/useNotification';
 import { useNotificationStore } from '@/stores/notification';
+import { useDropDown } from '@/hooks/useDropDown';
 
 const { removeNotification, clearNotifications } = useNotification();
 const userStore = useUserStore();
 const notificationStore = useNotificationStore();
 
-const { state: menuVisible, toggle: toggleMenu } = useToggle();
-const { state: notificationVisible, toggle: toggleNotification } = useToggle();
-
-const closeDropdowns = (event: MouseEvent) => {
-  const target = event.target as HTMLElement;
-
-  if (!target.closest('.avatar-menu') && !target.closest('.avatar')) {
-    menuVisible.value = false;
-  }
-
-  if (!target.closest('.notification-menu') && !target.closest('.notification')) {
-    notificationVisible.value = false;
-  }
-};
-
-onMounted(() => {
-  window.addEventListener('click', closeDropdowns);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('click', closeDropdowns);
-});
+const { dropDownButton: notificationButtonRef, dropDownMenu: notificationMenuRef, isOpen: notificationVisible } = useDropDown();
+const { dropDownButton: userButtonRef, dropDownMenu: userMenuRef, isOpen: userMenuVisible } = useDropDown();
 
 </script>
 
 <template>
   <div class="container">
-    <img src="@/assets/icons/Notification.svg" alt="" class="notification btn" @click="toggleNotification">
+    <img src="@/assets/icons/Notification.svg" ref="notificationButtonRef" alt="" class="notification btn">
 
-    <div v-if="notificationVisible" class="notification-menu" :class="{'clear-notifications': notificationStore.notifications.length === 0}">
+    <div v-if="notificationVisible" ref="notificationMenuRef" class="notification-menu" :class="{'clear-notifications': notificationStore.notifications.length === 0}">
       <p v-if="!notificationStore.notifications.length" class="no-notifications">No any notifications</p>
       <template v-else>
         <button v-if="notificationStore.notifications.length !== 0" class="clear-notifications btn" @click.stop="clearNotifications">Clear all</button>
@@ -58,14 +37,14 @@ onUnmounted(() => {
 
     <img
       src="@/assets/imgs/ava.jpg"
+      ref="userButtonRef"
       alt=""
       class="avatar btn"
-      @click="toggleMenu"
     >
-    <div v-if="menuVisible" class="user-menu">
+    <div v-if="userMenuVisible" ref="userMenuRef" class="user-menu">
         <ul>
             <li class="btn user-li">
-                <img :src="userStore.user?.img" alt="" class="user-avatar">
+                <img src="@/assets/imgs/ava.jpg" alt="" class="user-avatar">
                 <span class="user-name">{{ userStore.user?.username }}</span>
 
             </li>

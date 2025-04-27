@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { AuthAPI } from '@/api/auth'
 
 export interface User {
@@ -43,7 +43,7 @@ export const useUserStore = defineStore('user', () => {
             return
         }
         try {
-            const userData = await AuthAPI.getMe()
+            const {user: userData} = await AuthAPI.getMe()
             user.value = userData
             token.value = storedToken
             isLogin.value = true
