@@ -46,12 +46,16 @@
   border: 0.5px solid #606060;
 }
 
+.border-primary{
+  border: 1px solid #7d03c8;
+}
+
 .input-wrapper {
   position: relative;
   width: 100%;
 }
 
-.input-wrapper > input {
+.input-wrapper > input, .input-wrapper > textarea {
   padding: 0.7rem;
   padding-top: 1.4rem; 
   border-radius: var(--radius);
@@ -62,22 +66,23 @@
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
+  resize: none;
 }
 
-.input-wrapper > input:focus {
+.input-wrapper > input:focus, .input-wrapper > textarea:focus {
   outline: none;
   border: 1px solid #e8e8e8;
 }
 
-.input-wrapper > input:hover {
+.input-wrapper > input:hover, .input-wrapper > textarea:hover {
   border-color: #e8e8e8;
 }
 
-.input-wrapper > input::placeholder {
+.input-wrapper > input::placeholder, .input-wrapper > textarea::placeholder {
   color: transparent;
 }
 
-.input-wrapper > label {
+.input-wrapper > label{
   position: absolute;
   top: 50%;
   left: 12px;
@@ -91,7 +96,9 @@
 }
 
 .input-wrapper > input:focus::before,
-.input-wrapper > input:not(:placeholder-shown)::before {
+.input-wrapper > input:not(:placeholder-shown)::before,
+.input-wrapper > textarea:focus::before,
+.input-wrapper > textarea:not(:placeholder-shown)::before {
   content: "";
   position: absolute;
   top: -1px;
@@ -102,14 +109,17 @@
 }
 
 .input-wrapper > input:focus + label,
-.input-wrapper > input:not(:placeholder-shown) + label {
+.input-wrapper > input:not(:placeholder-shown) + label,
+.input-wrapper > textarea:focus + label,
+.input-wrapper > textarea:not(:placeholder-shown) + label {
   padding: 5px 10px;
   top: 0;
   font-size: 12px;
   border: 1px solid #e8e8e8;
 }
 
-.input-wrapper > input:not(:placeholder-shown){
+.input-wrapper > input:not(:placeholder-shown),
+.input-wrapper > textarea:not(:placeholder-shown) {
   border-color: #e8e8e8;
 }
 
@@ -136,4 +146,12 @@ button{
 button:disabled{
   background-color: #8a8a8a;
   cursor: not-allowed;
+}
+
+main{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }

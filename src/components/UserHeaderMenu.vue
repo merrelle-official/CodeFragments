@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/user';
 import { useNotification } from '@/hooks/useNotification';
 import { useNotificationStore } from '@/stores/notification';
 import { useDropDown } from '@/hooks/useDropDown';
+import router from '@/router';
 
 const { removeNotification, clearNotifications } = useNotification();
 const userStore = useUserStore();
@@ -43,13 +44,13 @@ const { dropDownButton: userButtonRef, dropDownMenu: userMenuRef, isOpen: userMe
     >
     <div v-if="userMenuVisible" ref="userMenuRef" class="user-menu">
         <ul>
-            <li class="btn user-li">
+            <li class="btn user-li" @click="router.push({name: 'user', params: {username: userStore.user?.username}})">
                 <img src="@/assets/imgs/ava.jpg" alt="" class="user-avatar">
                 <span class="user-name">{{ userStore.user?.username }}</span>
 
             </li>
             <hr>
-            <li class="btn"><button >Profile</button></li>
+            <li class="btn" @click="router.push({name: 'user', params: {username: userStore.user?.username}})"><button >Profile</button></li>
             <li class="btn"><button >Settings</button></li>
             <li class="btn" @click="userStore.logout"><button>Logout</button></li>
         </ul>

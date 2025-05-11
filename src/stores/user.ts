@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { AuthAPI } from '@/api/auth'
+import { UserAPI } from '@/api/user'
 
 export interface User {
     id: number,
@@ -52,6 +53,11 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    async function getUserInfoByUsername(username: string) {
+        const response = await UserAPI.getUserInfoByUsername(username)
+        return response
+    }
+
     return {
         isLogin,
         user,
@@ -59,5 +65,6 @@ export const useUserStore = defineStore('user', () => {
         register,
         logout,
         checkAuth,
+        getUserInfoByUsername,
     }
 })
