@@ -14,5 +14,4 @@ export const UserAPI = {
         const response = await api.get(`/user/email/${email}`);
         return response.data;
     },
-
 }

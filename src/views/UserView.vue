@@ -1,10 +1,18 @@
 <script lang="ts" setup>
 import UserPage from '@/components/UserPage.vue';
-import { onBeforeMount } from 'vue';
+import {ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
-const username = route.params.username as string
+const username = ref<string>(route.params.username as string)
+
+watch(
+    () => route.params.username,
+    (newUsername) => {
+        username.value = newUsername as string
+    }
+    
+)
 
 
 </script>
