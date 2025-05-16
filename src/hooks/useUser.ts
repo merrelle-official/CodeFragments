@@ -41,7 +41,22 @@ export function useUser() {
         }
     }
 
-    
+    const updateUserInfo = async (data: Partial<FullUserInfo>) => {
+        isError.value = false
+        textError.value = null
+        isLoading.value = true
+
+        try {
+            const updatedUser = await userStore.updateUser(data)
+            user.value = updatedUser
+        } catch (error: any) {
+            isError.value = true
+            textError.value = error?.message || 'Unknown error'
+            console.error('Ошибка при обновлении пользователя:', error)
+        } finally {
+            isLoading.value = false
+        }
+    }
 
     return {
         isLoading,
@@ -49,5 +64,6 @@ export function useUser() {
         textError,
         user,
         getUserInfoByUsername,
+        updateUserInfo,
     }
 }

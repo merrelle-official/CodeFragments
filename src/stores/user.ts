@@ -58,6 +58,11 @@ export const useUserStore = defineStore('user', () => {
         return response
     }
 
+    async function updateUser(userData: object) {
+        const response = await UserAPI.updateUser(userData)
+        return response
+    }
+
     return {
         isLogin,
         user,
@@ -66,5 +71,6 @@ export const useUserStore = defineStore('user', () => {
         logout,
         checkAuth,
         getUserInfoByUsername,
+        updateUser,
     }
 })

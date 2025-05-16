@@ -14,4 +14,9 @@ export const UserAPI = {
         const response = await api.get(`/user/email/${email}`);
         return response.data;
     },
+
+    async updateUser( userData: object) {
+        const response = await api.patch(`/user/update`, userData);
+        return response.data;
+    },
 }

@@ -35,7 +35,10 @@ const isUserOwner = ref(computed(() => {
 }))
 
 onBeforeMount(async () => {
-  await getUserInfo(username)
+    await getUserInfo(username)
+    newFirstname.value = userPageInfo.value?.firstname || ''
+    newLastname.value = userPageInfo.value?.lastname || ''
+    newBio.value = userPageInfo.value?.bio || ''
 })
 
 const getUserInfo = async (newUsername: string) => {
@@ -77,6 +80,23 @@ const handleToggleFollow = async () => {
   }
 }
 
+const handleSaveChangedPofile = async () => {
+    if (userPageInfo.value) {
+        const updatedUser = {
+            ...userPageInfo.value,
+            firstname: newFirstname.value,
+            lastname: newLastname.value,
+            bio: newBio.value
+        }
+        try {
+            await userStore.updateUser(updatedUser)
+            isEditMode.value = false
+            await getUserInfo(userPageInfo.value.username)
+        } catch (error) {
+            console.error('Error updating user:', error)
+        }
+    }
+}
 
 </script>
 
@@ -85,7 +105,7 @@ const handleToggleFollow = async () => {
         <div class="user-info__main__user-info">
             <img src="@/assets/imgs/ava.jpg" alt="user avatar" class="user-avatar border">
             <div class="user-info__main__user-info__info">
-                <h2 v-if="!isEditMode" class="user-info__main__user-info__info__user-fullname">{{ userPageInfo?.username }}</h2>
+                <h2 v-if="!isEditMode" class="user-info__main__user-info__info__user-fullname">{{ fullname }}</h2>
                 <div v-else class="user-info__main__user-info__info__input-name">
                     <div class="input-wrapper">
                         <input type="text" id="firstname" placeholder=" " class="input-field input" v-model="newFirstname" required>
@@ -117,7 +137,7 @@ const handleToggleFollow = async () => {
             </template>
             <template v-else>
                 <button v-if="!isEditMode" class="user-info__main__follow-container__edit-btn btn darker border" @click="handleEditProfile">Edit profile</button>
-                <button v-else class="user-info__main__follow-container__save-btn btn btn-primary" @click="handleEditProfile">Save</button>
+                <button v-else class="user-info__main__follow-container__save-btn btn btn-primary" @click="handleSaveChangedPofile">Save</button>
             </template>
         </div>
 
